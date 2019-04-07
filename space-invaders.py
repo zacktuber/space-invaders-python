@@ -1,5 +1,6 @@
 import turtle
 import os
+import math
 
 wn = turtle.Screen()
 wn.bgcolor("black")
@@ -74,6 +75,12 @@ def fire_bullet():
         bullet.setposition(x, y)
         bullet.showturtle()
 
+def isCollision(t1, t2):
+    dx = t1.xcor()-t2.xcor()
+    dy = t1.ycor()-t2.ycor()
+    d = math.sqrt (math.pow(dx, 2)+ math.pow(dy, 2))
+    return d < 20
+
 
 wn.listen()
 wn.onkey(move_left, "Left")
@@ -104,5 +111,12 @@ while True:
     if bullet.ycor() > 275:
         bullet.hideturtle()
         bulletstate = "ready"
+
+    if isCollision(bullet, enemy):
+        bullet.hideturtle()
+        bulletstate = "ready"
+        bullet.setposition(0, -400)
+        enemy.setposition(-200, 250)
+        enemyspeed *= 1.1
 
 delay = raw_input("Press any key to finish")
