@@ -28,12 +28,18 @@ player.setheading(90)
 
 playerspeed = 15
 
-enemy = turtle.Turtle()
-enemy.color("green")
-enemy.shape("square")
-enemy.penup()
-enemy.speed(0)
-enemy.setposition(-200, 250)
+number_of_enemies = 5
+enemies = []
+
+for i in range(number_of_enemies):
+    enemies.append(turtle.Turtle())
+
+for i, enemy in enumerate(enemies):
+    enemy.color("green")
+    enemy.shape("square")
+    enemy.penup()
+    enemy.speed(0)
+    enemy.setposition(-50 * i, 200)
 
 enemyspeed = 3
 
@@ -88,21 +94,31 @@ wn.onkey(move_right, "Right")
 wn.onkey(fire_bullet, "space")
 
 while True:
-    x = enemy.xcor()
-    x += enemyspeed
-    enemy.setx(x)
+    for enemy in enemies:
+        x = enemy.xcor()
+        x += enemyspeed
+        enemy.setx(x)
 
-    if enemy.xcor() > 280:
-        y = enemy.ycor()
-        y -= 40
-        enemyspeed *= -1
-        enemy.sety(y)
+        if enemy.xcor() > 280:
+            for e in enemies:
+                y = e.ycor()
+                y -= 40
+                enemyspeed *= -1
+                e.sety(y)
 
-    if enemy.xcor() < -280:
-        y = enemy.ycor()
-        y -= 40
-        enemyspeed *= -1
-        enemy.sety(y)
+        if enemy.xcor() < -280:
+            for e in enemies:
+                y = e.ycor()
+                y -= 40
+                enemyspeed *= -1
+                e.sety(y)
+
+        if isCollision(bullet, enemy):
+            bullet.hideturtle()
+            bulletstate = "ready"
+            bullet.setposition(0, -400)
+            enemy.setposition(-200, 250)
+            enemyspeed *= 1.1
 
     y = bullet.ycor()
     y += bulletspeed
@@ -112,11 +128,6 @@ while True:
         bullet.hideturtle()
         bulletstate = "ready"
 
-    if isCollision(bullet, enemy):
-        bullet.hideturtle()
-        bulletstate = "ready"
-        bullet.setposition(0, -400)
-        enemy.setposition(-200, 250)
-        enemyspeed *= 1.1
+
 
 delay = raw_input("Press any key to finish")
