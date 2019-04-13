@@ -5,10 +5,15 @@ import math
 wn = turtle.Screen()
 wn.bgcolor("black")
 wn.title("Space Invaders")
+wn.bgpic("background.gif")
+
+wn.register_shape("mabel80.gif")
+wn.register_shape("gnome.gif")
+wn.register_shape("hook.gif")
 
 border_pen = turtle.Turtle()
 border_pen.speed(0)
-border_pen.color("green")
+border_pen.color("#654321")
 border_pen.penup()
 border_pen.setposition(-300, -300)
 border_pen.pendown()
@@ -18,9 +23,19 @@ for side in range(4):
     border_pen.lt(90)
 border_pen.hideturtle()
 
+score = 0
+score_pen = turtle.Turtle()
+score_pen.speed(0)
+score_pen.color("white")
+score_pen.penup()
+score_pen.setposition(-290, 280)
+score_pen.hideturtle()
+scorestring = "Score: %s" %score
+score_pen.write(scorestring, False, align="left", font=("Arial", 14, "normal"))
+
 player = turtle.Turtle()
 player.color("blue")
-player.shape("triangle")
+player.shape("mabel80.gif")
 player.penup()
 player.speed(0)
 player.setposition(0, -250)
@@ -36,7 +51,7 @@ for i in range(number_of_enemies):
 
 for i, enemy in enumerate(enemies):
     enemy.color("green")
-    enemy.shape("square")
+    enemy.shape("gnome.gif")
     enemy.penup()
     enemy.speed(0)
     enemy.setposition(-50 * i, 200)
@@ -45,10 +60,11 @@ enemyspeed = 3
 
 bullet = turtle.Turtle()
 bullet.color("red")
-bullet.shape("triangle")
+bullet.shape("hook.gif")
 bullet.penup()
 bullet.speed(0)
 bullet.setheading(90)
+bullet.setposition(0,-300)
 bullet.shapesize(0.5, 0.5)
 bullet.hideturtle()
 bulletspeed = 20
@@ -87,13 +103,24 @@ def isCollision(t1, t2):
     d = math.sqrt (math.pow(dx, 2)+ math.pow(dy, 2))
     return d < 20
 
+def printGameOver():
+    go_pen = turtle.Turtle()
+    go_pen.speed(0)
+    go_pen.color("white")
+    go_pen.penup()
+    go_pen.setposition(0, 0)
+    go_pen.hideturtle()
+    go_pen.write("GAME OVER DUDE!", False, align="center", font=("Arial", 40, "bold"))
+
 
 wn.listen()
 wn.onkey(move_left, "Left")
 wn.onkey(move_right, "Right")
 wn.onkey(fire_bullet, "space")
 
-while True:
+gameover=False
+
+while not gameover:
     for enemy in enemies:
         x = enemy.xcor()
         x += enemyspeed
@@ -119,6 +146,17 @@ while True:
             bullet.setposition(0, -400)
             enemy.setposition(-200, 250)
             enemyspeed *= 1.1
+            score += 10
+            scorestring = "Score: %s" %score
+            score_pen.clear()
+            score_pen.write(scorestring, False, align="left", font=("Arial", 14, "normal"))
+
+        if isCollision(enemy, player):
+            gameover = True
+
+        if enemy.ycor() < -250:
+            gameover = True
+
 
     y = bullet.ycor()
     y += bulletspeed
@@ -129,5 +167,5 @@ while True:
         bulletstate = "ready"
 
 
-
+printGameOver()
 delay = raw_input("Press any key to finish")
