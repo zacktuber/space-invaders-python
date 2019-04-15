@@ -4,7 +4,7 @@ import math
 
 wn = turtle.Screen()
 wn.bgcolor("black")
-wn.title("Space Invaders")
+wn.title("Gnome Invaders")
 wn.bgpic("background.gif")
 
 wn.register_shape("mabel80.gif")
@@ -91,6 +91,7 @@ def move_right():
 def fire_bullet():
     global bulletstate
     if bulletstate == "ready":
+        os.system("afplay grapplinghook.m4a&")
         bulletstate = "fire"
         x = player.xcor()
         y = player.ycor() + 10
@@ -104,9 +105,10 @@ def isCollision(t1, t2):
     return d < 20
 
 def printGameOver():
+    os.system("afplay riggedit.m4a&")
     go_pen = turtle.Turtle()
     go_pen.speed(0)
-    go_pen.color("white")
+    go_pen.color("red")
     go_pen.penup()
     go_pen.setposition(0, 0)
     go_pen.hideturtle()
@@ -141,6 +143,7 @@ while not gameover:
                 e.sety(y)
 
         if isCollision(bullet, enemy):
+            os.system("afplay wowcool.m4a&")
             bullet.hideturtle()
             bulletstate = "ready"
             bullet.setposition(0, -400)
